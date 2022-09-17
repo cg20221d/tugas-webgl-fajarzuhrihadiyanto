@@ -10,4 +10,6 @@ Class   : Computer Graphics D
 
 ## Assignment 1
 
-In this assignment, i am trying to create typography of the latest 2 digits of my NRP using LINE and the latest 2 characters of my name using TRIANGLE. 
+In this assignment, i am trying to create typography of the latest 2 digits of my NRP using LINE and the latest 2 characters of my name using TRIANGLE.
+
+The word : 48to
