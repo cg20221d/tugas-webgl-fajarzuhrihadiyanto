@@ -98,9 +98,13 @@ export default {
             init: [0, 0, 0],
             factor: [0.0248, 0, 0],
             addFn: (i, f) => i.map((e, index) => e + f[index]),
-            transformFn: i => i.map(e => (
-              4.75 * Math.sin(e + 3.954) + 4.75 - 1.3
-            ))
+            transformFn: i => i.map(e => {
+                const lowerBound = -1.3
+                const upperBound = 8.2
+                const range = upperBound - lowerBound
+                const initial = 0 // must be between lowerBound (inclusive) and upperBound (exclusive)
+                return (range/2) * Math.sin(e - Math.asin(2 * (((lowerBound + upperBound) / 2) - initial)/range)) + (range/2) + lowerBound
+            })
         }
     ],
 }
