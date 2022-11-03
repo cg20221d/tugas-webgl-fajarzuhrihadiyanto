@@ -93,19 +93,21 @@ export default {
             isOn: true
         },
     ],
+    initIsTransform: true,
+    transformMultiplier: 1,
     transformations: [
         {
             type: 'translate',
             init: [-1.216, 0, 0],
             factor: [0, 0, 0],
-            addFn: (i, f) => i.map((e, index) => e + f[index]),
+            addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i
         },
         {
             type: 'scale',
             init: [0, 0, 0],
             factor: [0.01, 0.01, 0],
-            addFn: (i, f) => i.map((e, index) => e + f[index]),
+            addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i.map(e => {
                 const lowerBound = 0.5
                 const upperBound = 2
@@ -118,7 +120,7 @@ export default {
             type: 'translate',
             init: [1.216, 0, 0],
             factor: [0, 0, 0],
-            addFn: (i, f) => i.map((e, index) => e + f[index]),
+            addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i
         },
     ]

@@ -68,6 +68,30 @@ const main = async () => {
     ]
     const transform = segmentDisplay.map(segment => segment.transformations.map(transformation => transformation.init))
 
+    const isTransform = segmentDisplay.map(segment => segment.initIsTransform)
+    const transformMultiplier = segmentDisplay.map(segment => segment.transformMultiplier)
+
+    const onKeyDown = event => {
+        if ([37, 39].includes(event.keyCode)) {
+            isTransform[2] = true
+            transformMultiplier[2] = event.keyCode - 38
+        } else if ([38, 40].includes(event.keyCode)) {
+            isTransform[3] = true
+            transformMultiplier[3] = 39 - event.keyCode
+        }
+    }
+
+    const onKeyUp = event => {
+        if ([37, 39].includes(event.keyCode)) {
+            isTransform[2] = false
+        } else if ([38, 40].includes(event.keyCode)) {
+            isTransform[3] = false
+        }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('keyup', onKeyUp)
+
     const render = () => {
         //#region  //*=========== Paint The Background ===========
         const backgroundColor = [0, 0, 0, 1]
@@ -102,7 +126,9 @@ const main = async () => {
                       transformation.transformFn(transform[segmentIdx][index])
                     )
 
-                    transform[segmentIdx][index] = addFn(transform[segmentIdx][index], factorTransform)
+                    if (isTransform[segmentIdx]) {
+                        transform[segmentIdx][index] = addFn(transform[segmentIdx][index], factorTransform, transformMultiplier[segmentIdx])
+                    }
                 })
 
                 gl.uniformMatrix4fv(uTransform, false, transformationMatrix)

@@ -92,12 +92,14 @@ export default {
             isOn: true
         },
     ],
+    initIsTransform: false,
+    transformMultiplier: 1,
     transformations: [
         {
             type: 'rotateX',
             init: 0,
             factor: 0.01,
-            addFn: (i, f) => i + f,
+            addFn: (i, f, m= 1) => i + m * f,
             transformFn: i => i
         }
     ]
