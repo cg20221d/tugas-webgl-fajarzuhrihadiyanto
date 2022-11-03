@@ -78,7 +78,7 @@ const main = async () => {
             transformMultiplier[2] = event.keyCode - 38
         } else if ([38, 40].includes(event.keyCode)) {
             isTransform[3] = true
-            transformMultiplier[3] = 39 - event.keyCode
+            transformMultiplier[3] = event.keyCode - 39
         }
     }
 
