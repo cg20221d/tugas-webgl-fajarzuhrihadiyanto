@@ -97,21 +97,21 @@ export default {
     transformations: [
         // {
         //     type: 'translate',
-        //     init: [1.216, 0, 0],
+        //     theta: [1.216, 0, 0],
         //     factor: [0, 0, 0],
         //     addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
         //     transformFn: i => i
         // },
         {
             type: 'rotateY',
-            init: 0,
+            theta: 0,
             factor: 0.01,
             addFn: (i, f, m=1) => i + m * f,
             transformFn: i => i
         },
         // {
         //     type: 'translate',
-        //     init: [-1.216, 0, 0],
+        //     theta: [-1.216, 0, 0],
         //     factor: [0, 0, 0],
         //     addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
         //     transformFn: i => i

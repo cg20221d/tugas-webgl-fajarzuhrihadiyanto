@@ -97,7 +97,7 @@ export default {
     transformations: [
         {
             type: 'rotateX',
-            init: 0,
+            theta: 0,
             factor: 0.01,
             addFn: (i, f, m= 1) => i + m * f,
             transformFn: i => i

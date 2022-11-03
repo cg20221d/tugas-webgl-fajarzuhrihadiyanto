@@ -98,14 +98,14 @@ export default {
     transformations: [
         {
             type: 'translate',
-            init: [-1.216, 0, 0],
+            theta: [-1.216, 0, 0],
             factor: [0, 0, 0],
             addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i
         },
         {
             type: 'scale',
-            init: [0, 0, 0],
+            theta: [0, 0, 0],
             factor: [0.01, 0.01, 0],
             addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i.map(e => {
@@ -118,7 +118,7 @@ export default {
         },
         {
             type: 'translate',
-            init: [1.216, 0, 0],
+            theta: [1.216, 0, 0],
             factor: [0, 0, 0],
             addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i

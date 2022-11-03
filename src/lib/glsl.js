@@ -36,7 +36,7 @@ const main = async () => {
     gl.useProgram(shaderProgram)
     //#endregion  //*======== Create Shader Program ===========
 
-
+    //#region  //*=========== Configure Camera and Projection ===========
     const cameraLocation = [0, 0, 7.5]
 
     const uTransform = gl.getUniformLocation(shaderProgram, "uTransform");
@@ -59,6 +59,7 @@ const main = async () => {
       0.5,                // near bound
       50.0                 // far bound
     );
+    //#endregion  //*======== Configure Camera and Projection ===========
 
     const segmentDisplay = [
         segmentDisplay1,
@@ -66,8 +67,8 @@ const main = async () => {
         segmentDisplay3,
         segmentDisplay4
     ]
-    const transform = segmentDisplay.map(segment => segment.transformations.map(transformation => transformation.init))
 
+    //#region  //*=========== Configure Event Listener ===========
     const isTransform = segmentDisplay.map(segment => segment.initIsTransform)
     const transformMultiplier = segmentDisplay.map(segment => segment.transformMultiplier)
 
@@ -91,6 +92,9 @@ const main = async () => {
 
     document.addEventListener('keydown', onKeyDown)
     document.addEventListener('keyup', onKeyUp)
+    //#endregion  //*======== Configure Event Listener ===========
+
+    const theta = segmentDisplay.map(segment => segment.transformations.map(transformation => transformation.theta))
 
     const render = () => {
         //#region  //*=========== Paint The Background ===========
@@ -108,6 +112,7 @@ const main = async () => {
                 let color = value.isOn ? [57, 255, 20] : [6, 34, 0]
                 color = color.map(value => value / 255)
 
+                // Scale up shape by 5 to look bigger
                 const coordinates = value.coordinates.map(coordinate => coordinate * 5)
 
                 // Generate same color for every points
@@ -115,6 +120,7 @@ const main = async () => {
                 //#endregion  //*======== Define Color ===========
 
 
+                //#region  //*=========== Configure Transformation Matrix foreach Segment ===========
                 let transformationMatrix = glMatrix.mat4.create()
                 segment.transformations.forEach((transformation, index) => {
                     const factorTransform = transformation.factor
@@ -123,13 +129,15 @@ const main = async () => {
                     glMatrix.mat4[transformation.type](
                       transformationMatrix,
                       transformationMatrix,
-                      transformation.transformFn(transform[segmentIdx][index])
+                      transformation.transformFn(theta[segmentIdx][index])
                     )
 
+                    // only change theta if transform flag is true
                     if (isTransform[segmentIdx]) {
-                        transform[segmentIdx][index] = addFn(transform[segmentIdx][index], factorTransform, transformMultiplier[segmentIdx])
+                        theta[segmentIdx][index] = addFn(theta[segmentIdx][index], factorTransform, transformMultiplier[segmentIdx])
                     }
                 })
+                //#endregion  //*======== Configure Transformation Matrix foreach Segment ===========
 
                 gl.uniformMatrix4fv(uTransform, false, transformationMatrix)
                 gl.uniformMatrix4fv(uView, false, view)

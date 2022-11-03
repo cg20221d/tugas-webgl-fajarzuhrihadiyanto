@@ -97,7 +97,7 @@ export default {
     transformations: [
         {
             type: 'translate',
-            init: [0, 0, 0],
+            theta: [0, 0, 0],
             factor: [0.0248, 0, 0],
             addFn: (i, f, m=1) => i.map((e, index) => e + m * f[index]),
             transformFn: i => i.map(e => {
@@ -105,6 +105,7 @@ export default {
                 const upperBound = 8.2
                 const range = upperBound - lowerBound
                 const initial = 0 // must be between lowerBound (inclusive) and upperBound (exclusive)
+
                 return (range/2) * Math.sin(e - Math.asin(2 * (((lowerBound + upperBound) / 2) - initial)/range)) + (range/2) + lowerBound
             })
         }
