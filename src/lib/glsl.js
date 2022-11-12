@@ -1,4 +1,4 @@
-import * as glMatrix from './gl-matrix-v3.3.0'
+import * as glMatrix from './gl-matrix-v3.3.0/index.js'
 
 import readGLSL from './glsl-reader.js'
 import getWebGL from './webgl-checker.js'
