@@ -94,6 +94,25 @@ export default {
     ],
     initIsTransform: false,
     transformMultiplier: 1,
+    events: (isTransform, transformMultiplier, index) => [
+        {
+            eventName: 'keydown',
+            callback: event => {
+                if ([38, 40].includes(event.keyCode)) {
+                    isTransform[index] = true
+                    transformMultiplier[index] = event.keyCode - 39
+                }
+            }
+        },
+        {
+            eventName: 'keyup',
+            callback: event => {
+                if ([38, 40].includes(event.keyCode)) {
+                    isTransform[index] = false
+                }
+            }
+        }
+    ],
     transformations: [
         {
             type: 'rotateX',

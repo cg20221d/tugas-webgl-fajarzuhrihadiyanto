@@ -72,26 +72,12 @@ const main = async () => {
     const isTransform = segmentDisplay.map(segment => segment.initIsTransform)
     const transformMultiplier = segmentDisplay.map(segment => segment.transformMultiplier)
 
-    const onKeyDown = event => {
-        if ([37, 39].includes(event.keyCode)) {
-            isTransform[2] = true
-            transformMultiplier[2] = event.keyCode - 38
-        } else if ([38, 40].includes(event.keyCode)) {
-            isTransform[3] = true
-            transformMultiplier[3] = event.keyCode - 39
-        }
-    }
-
-    const onKeyUp = event => {
-        if ([37, 39].includes(event.keyCode)) {
-            isTransform[2] = false
-        } else if ([38, 40].includes(event.keyCode)) {
-            isTransform[3] = false
-        }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-    document.addEventListener('keyup', onKeyUp)
+    segmentDisplay.forEach((segment, index) => {
+        const events = segment.events?.(isTransform, transformMultiplier, index)
+        events?.forEach(event => {
+            document.addEventListener(event.eventName, event.callback)
+        })
+    })
     //#endregion  //*======== Configure Event Listener ===========
 
     const theta = segmentDisplay.map(segment => segment.transformations.map(transformation => transformation.theta))
