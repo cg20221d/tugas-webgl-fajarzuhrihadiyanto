@@ -7,6 +7,7 @@ import segmentDisplay1 from '../data/segment-display-1.js'
 import segmentDisplay2 from '../data/segment-display-2.js'
 import segmentDisplay3 from '../data/segment-display-3.js'
 import segmentDisplay4 from '../data/segment-display-4.js'
+import convertTo3D from "./convertTo3D.js";
 
 const degToRad = deg => deg * Math.PI / 180
 
@@ -61,7 +62,7 @@ const main = async () => {
     );
     //#endregion  //*======== Configure Camera and Projection ===========
 
-    const segmentDisplay = [
+    let segmentDisplay = [
         segmentDisplay1,
         segmentDisplay2,
         segmentDisplay3,
@@ -82,6 +83,10 @@ const main = async () => {
 
     const theta = segmentDisplay.map(segment => segment.transformations.map(transformation => transformation.theta))
 
+    segmentDisplay = convertTo3D(segmentDisplay, 0.05)
+
+    gl.enable(gl.DEPTH_TEST)
+
     const render = () => {
         //#region  //*=========== Paint The Background ===========
         const backgroundColor = [0, 0, 0, 1]
@@ -95,7 +100,7 @@ const main = async () => {
             segment.data.forEach(value => {
                 //#region  //*=========== Define Color ===========
                 // Convert 0-255 scale color to 0-1 scale
-                let color = value.isOn ? [57, 255, 20] : [6, 34, 0]
+                let color = [12,6].includes(value.coordinates.length) ? [255,255,255] : (value.isOn ? [57, 255, 20] : [6, 34, 0])
                 color = color.map(value => value / 255)
 
                 // Scale up shape by 5 to look bigger
