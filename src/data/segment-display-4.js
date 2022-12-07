@@ -9,6 +9,7 @@ export default {
                 20 / 37, 2 / 37, 0,
                 20 / 37, 11 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: false
@@ -22,6 +23,7 @@ export default {
                 20 / 37, -2 / 37, 0,
                 20 / 37, -11 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: true
@@ -35,6 +37,7 @@ export default {
                 21 / 37, 12 / 37, 0,
                 30 / 37, 12 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: false
@@ -48,6 +51,7 @@ export default {
                 21 / 37, -1 / 37, 0,
                 30 / 37, -1 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: true
@@ -61,6 +65,7 @@ export default {
                 21 / 37, -12 / 37, 0,
                 30 / 37, -12 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: true
@@ -74,6 +79,7 @@ export default {
                 33 / 37, 2 / 37, 0,
                 33 / 37, 11 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: false
@@ -87,6 +93,7 @@ export default {
                 33 / 37, -2 / 37, 0,
                 33 / 37, -11 / 37, 0,
             ],
+            normal: [0,0,1],
             indices: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5],
             isFilled: true,
             isOn: true

@@ -9,6 +9,7 @@ import segmentDisplay3 from '../data/segment-display-3.js'
 import segmentDisplay4 from '../data/segment-display-4.js'
 import cube from '../data/cube.js'
 import ambient from './lighting/ambient.js'
+import point from './lighting/point.js'
 
 const degToRad = deg => deg * Math.PI / 180
 
@@ -89,13 +90,20 @@ const main = async () => {
     const ambientColor = [1,1,1] // White in 0-1 scale rgb mode
     const ambientIntensity = (248 + 300)/1000
     ambient(gl, shaderProgram, ambientColor, ambientIntensity)
+
+    point(gl, shaderProgram, [0,0,0])
     //#endregion  //*======== Configure Lighting ===========
 
+    const uNormalModel = gl.getUniformLocation(shaderProgram, 'uNormalModel')
+
     const render = () => {
+        
+        gl.enable(gl.DEPTH_TEST)
+
         //#region  //*=========== Paint The Background ===========
         const backgroundColor = [0, 0, 0, 1]
         gl.clearColor(...backgroundColor)
-        gl.clear(gl.COLOR_BUFFER_BIT)
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         //#endregion  //*======== Paint The Background ===========
 
         //#region  //*=========== Render All Segments ===========
@@ -139,9 +147,14 @@ const main = async () => {
                 gl.uniformMatrix4fv(uTransform, false, transformationMatrix)
                 gl.uniformMatrix4fv(uView, false, view)
                 gl.uniformMatrix4fv(uProjection, false, perspective)
+                
+                //#region  //*=========== Normal Model ===========
+                const normalModel = glMatrix.mat3.create()
+                glMatrix.mat3.normalFromMat4(normalModel, transformationMatrix)
+                gl.uniformMatrix3fv(uNormalModel, false, normalModel)
+                //#endregion  //*======== Normal Model ===========
 
-
-                glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices)
+                glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal)
             })
         })
         //#endregion  //*======== Render All Segments ===========
