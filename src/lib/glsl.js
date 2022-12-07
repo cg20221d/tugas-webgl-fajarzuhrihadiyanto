@@ -8,6 +8,7 @@ import segmentDisplay2 from '../data/segment-display-2.js'
 import segmentDisplay3 from '../data/segment-display-3.js'
 import segmentDisplay4 from '../data/segment-display-4.js'
 import cube from '../data/cube.js'
+import ambient from './lighting/ambient.js'
 
 const degToRad = deg => deg * Math.PI / 180
 
@@ -83,6 +84,12 @@ const main = async () => {
     //#endregion  //*======== Configure Event Listener ===========
 
     const theta = segmentDisplay.map(segment => segment.transformations?.map(transformation => transformation.theta))
+
+    //#region  //*=========== Configure Lighting ===========
+    const ambientColor = [1,1,1] // White in 0-1 scale rgb mode
+    const ambientIntensity = (248 + 300)/1000
+    ambient(gl, shaderProgram, ambientColor, ambientIntensity)
+    //#endregion  //*======== Configure Lighting ===========
 
     const render = () => {
         //#region  //*=========== Paint The Background ===========
