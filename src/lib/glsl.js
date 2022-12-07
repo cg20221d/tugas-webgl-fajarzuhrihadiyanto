@@ -86,13 +86,43 @@ const main = async () => {
 
     const theta = segmentDisplay.map(segment => segment.transformations?.map(transformation => transformation.theta))
 
+
+    let cubeSpeedX = 0
+    let cubeSpeedZ = 0
+    let cubePosX = 0
+    let cubePosZ = 0
+
     //#region  //*=========== Configure Lighting ===========
     const ambientColor = [1,1,1] // White in 0-1 scale rgb mode
     const ambientIntensity = (248 + 300)/1000
     ambient(gl, shaderProgram, ambientColor, ambientIntensity)
 
-    point(gl, shaderProgram, [0,0,0])
     //#endregion  //*======== Configure Lighting ===========
+
+
+    const onKeyDown = event => {
+        if (event.keyCode == 73) {
+            cubeSpeedZ = -0.01;
+        } else if (event.keyCode == 75) {
+            cubeSpeedZ = 0.01;
+        }
+
+        if (event.keyCode == 74) {
+            cubeSpeedX = -0.01;
+        } else if (event.keyCode == 76) {
+            cubeSpeedX = 0.01;
+        }
+    }
+
+    function onKeyup(event) {
+        if (event.keyCode == 73 || event.keyCode == 75) cubeSpeedZ = 0.0;
+        if (event.keyCode == 74 || event.keyCode == 76) cubeSpeedX = 0.0;
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('keyup', onKeyup)
+
+
 
     const uNormalModel = gl.getUniformLocation(shaderProgram, 'uNormalModel')
 
@@ -108,54 +138,96 @@ const main = async () => {
 
         //#region  //*=========== Render All Segments ===========
         segmentDisplay.forEach((segment, segmentIdx) => {
+            if (!segment.isCube) {
+                segment.data.forEach(value => {
+                    //#region  //*=========== Define Color ===========
+                    // Convert 0-255 scale color to 0-1 scale
+                    if (value.hello) console.log(value)
+                    let color = value.color || (value.isOn ? [57, 255, 20] : [6, 34, 0])
+                    color = color.map(value => value / 255)
+                    if (value.hello) console.log(color)
 
-            segment.data.forEach(value => {
-                //#region  //*=========== Define Color ===========
-                // Convert 0-255 scale color to 0-1 scale
-                if (value.hello) console.log(value)
-                let color = value.color || (value.isOn ? [57, 255, 20] : [6, 34, 0])
-                color = color.map(value => value / 255)
-                if (value.hello) console.log(color)
+                    // Scale up shape by 5 to look bigger
+                    const coordinates = value.coordinates.map(coordinate => coordinate * 5)
 
-                // Scale up shape by 5 to look bigger
-                const coordinates = value.coordinates.map(coordinate => coordinate * 5)
-
-                // Generate same color for every points
-                const pointColor = Array(coordinates.length / 3).fill([...color, 1]).flat()
-                //#endregion  //*======== Define Color ===========
+                    // Generate same color for every points
+                    const pointColor = Array(coordinates.length / 3).fill([...color, 1]).flat()
+                    //#endregion  //*======== Define Color ===========
 
 
-                //#region  //*=========== Configure Transformation Matrix foreach Segment ===========
-                let transformationMatrix = glMatrix.mat4.create()
-                segment.transformations?.forEach((transformation, index) => {
-                    const factorTransform = transformation.factor
-                    const addFn = transformation.addFn
+                    //#region  //*=========== Configure Transformation Matrix foreach Segment ===========
+                    let transformationMatrix = glMatrix.mat4.create()
+                    segment.transformations?.forEach((transformation, index) => {
+                        const factorTransform = transformation.factor
+                        const addFn = transformation.addFn
 
-                    glMatrix.mat4[transformation.type](
-                      transformationMatrix,
-                      transformationMatrix,
-                      transformation.transformFn(theta[segmentIdx][index])
-                    )
+                        glMatrix.mat4[transformation.type](
+                        transformationMatrix,
+                        transformationMatrix,
+                        transformation.transformFn(theta[segmentIdx][index])
+                        )
 
-                    // only change theta if transform flag is true
-                    if (isTransform[segmentIdx]) {
-                        theta[segmentIdx][index] = addFn(theta[segmentIdx][index], factorTransform, transformMultiplier[segmentIdx])
-                    }
+                        // only change theta if transform flag is true
+                        if (isTransform[segmentIdx]) {
+                            theta[segmentIdx][index] = addFn(theta[segmentIdx][index], factorTransform, transformMultiplier[segmentIdx])
+                        }
+                    })
+                    //#endregion  //*======== Configure Transformation Matrix foreach Segment ===========
+
+                    gl.uniformMatrix4fv(uTransform, false, transformationMatrix)
+                    gl.uniformMatrix4fv(uView, false, view)
+                    gl.uniformMatrix4fv(uProjection, false, perspective)
+                    
+                    //#region  //*=========== Normal Model ===========
+                    const normalModel = glMatrix.mat3.create()
+                    glMatrix.mat3.normalFromMat4(normalModel, transformationMatrix)
+                    gl.uniformMatrix3fv(uNormalModel, false, normalModel)
+                    //#endregion  //*======== Normal Model ===========
+
+                    glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal)
                 })
-                //#endregion  //*======== Configure Transformation Matrix foreach Segment ===========
+            } else {
+                segment.data.forEach(value => {
+                    //#region  //*=========== Define Color ===========
+                    // Convert 0-255 scale color to 0-1 scale
+                    let color = value.color || (value.isOn ? [57, 255, 20] : [6, 34, 0])
+                    color = color.map(value => value / 255)
 
-                gl.uniformMatrix4fv(uTransform, false, transformationMatrix)
-                gl.uniformMatrix4fv(uView, false, view)
-                gl.uniformMatrix4fv(uProjection, false, perspective)
-                
-                //#region  //*=========== Normal Model ===========
-                const normalModel = glMatrix.mat3.create()
-                glMatrix.mat3.normalFromMat4(normalModel, transformationMatrix)
-                gl.uniformMatrix3fv(uNormalModel, false, normalModel)
-                //#endregion  //*======== Normal Model ===========
+                    // Scale up shape by 5 to look bigger
+                    const coordinates = value.coordinates.map(coordinate => coordinate * 5)
 
-                glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal)
-            })
+                    // Generate same color for every points
+                    const pointColor = Array(coordinates.length / 3).fill([...color, 1]).flat()
+                    //#endregion  //*======== Define Color ===========
+
+
+                    //#region  //*=========== Configure Transformation Matrix foreach Segment ===========
+                    let transformationMatrix = glMatrix.mat4.create()
+                    
+                    cubePosX += cubeSpeedX;
+                    cubePosZ -= cubeSpeedZ;
+                    console.log(cubePosX)
+                    console.log(cubePosZ)
+                    glMatrix.mat4.translate(
+                        transformationMatrix, transformationMatrix, [cubePosX, 0.0, cubePosZ]
+                    );
+                    //#endregion  //*======== Configure Transformation Matrix foreach Segment ===========
+
+                    gl.uniformMatrix4fv(uTransform, false, transformationMatrix)
+                    gl.uniformMatrix4fv(uView, false, view)
+                    gl.uniformMatrix4fv(uProjection, false, perspective)
+                    
+                    //#region  //*=========== Normal Model ===========
+                    const normalModel = glMatrix.mat3.create()
+                    glMatrix.mat3.normalFromMat4(normalModel, transformationMatrix)
+                    gl.uniformMatrix3fv(uNormalModel, false, normalModel)
+                    //#endregion  //*======== Normal Model ===========
+
+                    glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal)
+                })
+            }
+            
+            point(gl, shaderProgram, [cubePosX,0,cubePosZ])
         })
         //#endregion  //*======== Render All Segments ===========
         requestAnimationFrame(render)

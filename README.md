@@ -16,3 +16,8 @@ The word : 48to
 
 ![image](https://user-images.githubusercontent.com/52820619/190883445-bae9a61c-190a-4066-9520-abf26c8423dd.png)
 
+## Assignment 2
+
+In this assignment, i am trying to convert the previous result from 2 dimensional coordinate system to 3 dimensional coordinate system by adding each vertex coordinate by z aspect.
+
+Demonstration https://webgl.fajarzuhri.me/
