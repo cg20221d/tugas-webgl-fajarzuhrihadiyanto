@@ -184,6 +184,10 @@ const main = async () => {
                     gl.uniformMatrix3fv(uNormalModel, false, normalModel)
                     //#endregion  //*======== Normal Model ===========
 
+                    
+                    const uShininessConstant = gl.getUniformLocation(shaderProgram, 'uShininessConstant')
+                    gl.uniform1f(uShininessConstant, segment.shininessConstant)
+
                     glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal)
                 })
             } else {
@@ -223,11 +227,13 @@ const main = async () => {
                     gl.uniformMatrix3fv(uNormalModel, false, normalModel)
                     //#endregion  //*======== Normal Model ===========
 
-                    glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal)
+                    glslDraw(gl, shaderProgram, value.isFilled ? gl.TRIANGLE_FAN : gl.LINE_LOOP, coordinates, pointColor, value.indices, value.normal, segment.shininessConstant)
                 })
             }
             
             point(gl, shaderProgram, [cubePosX,0,cubePosZ])
+
+
         })
         //#endregion  //*======== Render All Segments ===========
         requestAnimationFrame(render)
