@@ -99,6 +99,7 @@ export default {
             isOn: true
         },
     ],
+    shininessConstant: 200,
     initIsTransform: false,
     transformMultiplier: 1,
     events: (isTransform, transformMultiplier, index) => [
