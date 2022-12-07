@@ -7,6 +7,7 @@ import segmentDisplay1 from '../data/segment-display-1.js'
 import segmentDisplay2 from '../data/segment-display-2.js'
 import segmentDisplay3 from '../data/segment-display-3.js'
 import segmentDisplay4 from '../data/segment-display-4.js'
+import cube from '../data/cube.js'
 
 const degToRad = deg => deg * Math.PI / 180
 
@@ -63,8 +64,9 @@ const main = async () => {
 
     const segmentDisplay = [
         segmentDisplay1,
-        segmentDisplay2,
-        segmentDisplay3,
+        cube,
+        // segmentDisplay2,
+        // segmentDisplay3,
         segmentDisplay4
     ]
 
@@ -80,7 +82,7 @@ const main = async () => {
     })
     //#endregion  //*======== Configure Event Listener ===========
 
-    const theta = segmentDisplay.map(segment => segment.transformations.map(transformation => transformation.theta))
+    const theta = segmentDisplay.map(segment => segment.transformations?.map(transformation => transformation.theta))
 
     const render = () => {
         //#region  //*=========== Paint The Background ===========
@@ -95,8 +97,10 @@ const main = async () => {
             segment.data.forEach(value => {
                 //#region  //*=========== Define Color ===========
                 // Convert 0-255 scale color to 0-1 scale
-                let color = value.isOn ? [57, 255, 20] : [6, 34, 0]
+                if (value.hello) console.log(value)
+                let color = value.color || (value.isOn ? [57, 255, 20] : [6, 34, 0])
                 color = color.map(value => value / 255)
+                if (value.hello) console.log(color)
 
                 // Scale up shape by 5 to look bigger
                 const coordinates = value.coordinates.map(coordinate => coordinate * 5)
@@ -108,7 +112,7 @@ const main = async () => {
 
                 //#region  //*=========== Configure Transformation Matrix foreach Segment ===========
                 let transformationMatrix = glMatrix.mat4.create()
-                segment.transformations.forEach((transformation, index) => {
+                segment.transformations?.forEach((transformation, index) => {
                     const factorTransform = transformation.factor
                     const addFn = transformation.addFn
 
